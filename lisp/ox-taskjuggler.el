@@ -150,7 +150,6 @@
 (require 'ox)
 
 
-
 ;;; User Variables
 
 (defgroup org-export-taskjuggler nil
@@ -778,10 +777,11 @@ days from now."
   (concat
    ;; Opening project.
    (format "project %s \"%s\" \"%s\" %s %s {\n"
-           (or (org-element-property :ID project)
-               (org-element-property :CUSTOM_ID project)
-               (org-element-property :TJ_ID project)
-               (org-element-property :PROJECT_ID project))
+           (org-taskjuggler--clean-id
+            (or (org-element-property :PROJECT_ID project)
+                (org-element-property :ID project)
+                (org-element-property :CUSTOM_ID project)
+                (org-element-property :TJ_ID project)))
 	   (org-taskjuggler-get-name project)
 	   ;; Version is obtained through :TASKJUGGLER_VERSION:
 	   ;; property or `org-taskjuggler-default-project-version'.
