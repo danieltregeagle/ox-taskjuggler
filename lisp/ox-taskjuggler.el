@@ -949,10 +949,16 @@ a unique id will be associated to it."
      (and effort (format "  effort %s\n" effort))
      (and priority (format "  priority %s\n" priority))
      (and milestone "  milestone\n")
-     ;; Add other valid attributes.
+      ;; Add start/end from SCHEDULED/DEADLINE or properties.
+     (let ((start (org-taskjuggler-get-start task))
+           (end (org-taskjuggler-get-end task)))
+       (concat
+        (and start (format "  start %s\n" start))
+        (and end (format "  end %s\n" end))))
+     ;; Add other valid attributes (excluding start/end to avoid duplication).
      (org-taskjuggler--indent-string
       (org-taskjuggler--build-attributes
-       task org-taskjuggler-valid-task-attributes))
+       task (remq 'start (remq 'end org-taskjuggler-valid-task-attributes))))
      ;; Add inner tasks.
      (org-taskjuggler--indent-string
       (mapconcat 'identity
